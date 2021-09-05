@@ -83,7 +83,7 @@ public class RecruitService {
      * @param recruit
      */
     public void add(Recruit recruit) {
-        // recruit.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+        recruit.setId(idWorker.nextId() + ""); //雪花分布式ID生成器
         recruitDao.save(recruit);
     }
 
@@ -190,9 +190,10 @@ public class RecruitService {
 
     /**
      * 最新职位列表
+     *
      * @return
      */
-    public List<Recruit> newlist(){
+    public List<Recruit> newlist() {
         return recruitDao.findTop12ByStateNotOrderByCreatetimeDesc("0");
     }
 

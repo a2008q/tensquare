@@ -83,7 +83,7 @@ public class EnterpriseService {
      * @param enterprise
      */
     public void add(Enterprise enterprise) {
-        // enterprise.setId( idWorker.nextId()+"" ); 雪花分布式ID生成器
+        enterprise.setId(idWorker.nextId() + ""); //雪花分布式ID生成器
         enterpriseDao.save(enterprise);
     }
 
@@ -164,6 +164,7 @@ public class EnterpriseService {
 
     /**
      * 热门企业列表
+     *
      * @return
      */
     public List<Enterprise> hotlist() {

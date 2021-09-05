@@ -12,3 +12,6 @@ spring:
     database: MySQL
     show‐sql: true
     generate‐ddl: true
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true

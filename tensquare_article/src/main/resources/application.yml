@@ -1,14 +1,14 @@
-server: 
+server:
   port: 9004
 spring:
-  application:  
+  application:
     name: tensquare-article #指定服务名
-  datasource:  
+  datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/tensquare_article?characterEncoding=UTF8
     username: root
     password: 123456
-  jpa: 
+  jpa:
     database: MySQL
     show-sql: true
     properties:
@@ -16,3 +16,7 @@ spring:
         globally_quoted_identifiers: true
   redis:
     host: localhost
+  data:
+    mongodb:
+      host: 127.0.0.1
+      database: spit

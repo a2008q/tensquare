@@ -7,6 +7,7 @@ import entity.Result;
 import entity.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 public class SpitController {
     @Autowired
     private SpitService spitService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 查询全部数据
@@ -89,19 +92,25 @@ public class SpitController {
     @RequestMapping(value = "/comment/{parentId}/{page}/{size}", method = RequestMethod.GET)
     public Result findByParentId(@PathVariable String parentId,
                                  @PathVariable int page, @PathVariable int size) {
-        Page<Spit> pageList = spitService.findByParentId(parentId, page,
-                size);
+        Page<Spit> pageList = spitService.findByParentId(parentId, page, size);
         return new Result(true, StatusCode.OK, "查询成功", new PageResult<Spit>(pageList.getTotalElements(), pageList.getContent()));
     }
 
     /**
      * 点赞
+     *
      * @param id 吐槽Id
      * @return
      */
     @RequestMapping(value = "/thumbup/{id}", method = RequestMethod.PUT)
     public Result updateThumbup(@PathVariable String id) {
+        // TODO fix userId
+        String userid = "1";
+        if (redisTemplate.opsForValue().get("thumbup_" + userid + "_" + id) != null) {
+            return new Result(false, StatusCode.REPERROR, "您已经点过赞了");
+        }
         spitService.updateThumbup(id);
+        redisTemplate.opsForValue().set("thumbup_" + userid + "_" + id, "1");
         return new Result(true, StatusCode.OK, "点赞成功");
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import util.IdWorker;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,6 +58,26 @@ public class SpitService {
      */
     public void add(Spit spit) {
         spit.set_id(idWorker.nextId() + "");
+        //发布日期
+        spit.setPublishtime(new Date());
+        //浏览量
+        spit.setVisits(0);
+        //分享数
+        spit.setShare(0);
+        //点赞数
+        spit.setThumbup(0);
+        //回复数
+        spit.setComment(0);
+        //状态
+        spit.setState("1");
+        //如果存在上级ID,评论,上级评论数+1
+        if (spit.getParentid() != null && !"".equals(spit.getParentid())) {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("_id").is(spit.getParentid()));
+            Update update = new Update();
+            update.inc("comment", 1);
+            mongoTemplate.updateFirst(query, update, "spit");
+        }
         spitDao.save(spit);
     }
 

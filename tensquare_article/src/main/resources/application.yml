@@ -1,6 +1,6 @@
 server: 
   port: 9004
-spring: 
+spring:
   application:  
     name: tensquare-article #指定服务名
   datasource:  
@@ -14,3 +14,5 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
+  redis:
+    host: localhost

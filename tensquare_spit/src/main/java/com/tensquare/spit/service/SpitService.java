@@ -3,6 +3,12 @@ package com.tensquare.spit.service;
 import com.tensquare.spit.dao.SpitDao;
 import com.tensquare.spit.pojo.Spit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import util.IdWorker;
 
@@ -21,6 +27,8 @@ public class SpitService {
     private SpitDao spitDao;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     /**
      * 查询全部吐槽记录
@@ -69,4 +77,31 @@ public class SpitService {
     public void deleteById(String id) {
         spitDao.deleteById(id);
     }
+
+    /**
+     * 根据父Id查询吐槽列表
+     *
+     * @param parentId 父Id
+     * @param page     页码
+     * @param size     大小
+     * @return
+     */
+    public Page<Spit> findByParentId(String parentId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size);
+        return spitDao.findByParentid(parentId, pageRequest);
+    }
+
+    /**
+     * 点赞
+     *
+     * @param id 吐槽Id
+     */
+    public void updateThumbup(String id) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("_id").is(id));
+        Update update = new Update();
+        update.inc("thumbup", 1);
+        mongoTemplate.updateFirst(query, update, "spit");
+    }
+
 }

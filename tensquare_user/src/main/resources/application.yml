@@ -14,3 +14,7 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true
+  redis:
+    host: 127.0.0.1
+  rabbitmq:
+    host: 127.0.0.1

@@ -5,9 +5,13 @@ import com.tensquare.search.service.ArticleSearchService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import util.IdWorker;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @CrossOrigin
@@ -16,6 +20,10 @@ public class ArticleSearchController {
 
     @Autowired
     private ArticleSearchService articleSearchService;
+    @Autowired
+    private IdWorker idWorker;
+    @Autowired
+    private HttpServletRequest request;
 
     /**
      * 添加文章
@@ -25,6 +33,11 @@ public class ArticleSearchController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result save(@RequestBody Article article) {
+        Claims claims = (Claims) request.getAttribute("user_claims");
+        if (claims == null) {
+            return new Result(false, StatusCode.ACCESSERROR, "无权访问");
+        }
+        article.setId(idWorker.nextId() + "");
         articleSearchService.add(article);
         return new Result(true, StatusCode.OK, "操作成功");
     }

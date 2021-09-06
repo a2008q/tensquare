@@ -5,10 +5,14 @@ import com.tensquare.user.service.UserService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import util.JwtUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,6 +27,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private HttpServletRequest request;
 
 
     /**
@@ -102,6 +110,10 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public Result delete(@PathVariable String id) {
+        Claims claims = (Claims) request.getAttribute("admin_claims");
+        if (claims == null) {
+            return new Result(true, StatusCode.ACCESSERROR, "无权访问");
+        }
         userService.deleteById(id);
         return new Result(true, StatusCode.OK, "删除成功");
     }
@@ -116,6 +128,28 @@ public class UserController {
         mobile = "+86" + mobile;
         userService.sendSms(mobile);
         return new Result(true, StatusCode.OK, "发送成功");
+    }
+
+    /**
+     * 用户登陆
+     *
+     * @param mobile
+     * @param password
+     * @return
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Result login(String mobile, String password) {
+        User user = userService.findByMobileAndPassword(mobile, password);
+        if (user != null) {
+            String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "admin");
+            Map map = new HashMap();
+            map.put("token", token);
+            map.put("name", user.getNickname());
+            map.put("avatar", user.getAvatar());
+            return new Result(true, StatusCode.OK, "登陆成功", map);
+        } else {
+            return new Result(false, StatusCode.LOGINERROR, "用户名或密码错误");
+        }
     }
 
 

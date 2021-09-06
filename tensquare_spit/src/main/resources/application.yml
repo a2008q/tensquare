@@ -9,3 +9,6 @@ spring:
       database: spit
   redis:
     host: localhost
+jwt:
+  config:
+    key: OgM9k5oT

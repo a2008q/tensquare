@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import util.IdWorker;
 
@@ -36,6 +37,9 @@ public class UserService {
     private RedisTemplate redisTemplate;
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     /**
      * 查询全部列表
@@ -91,6 +95,9 @@ public class UserService {
     public void add(User user) {
         //雪花分布式ID生成器
         user.setId(idWorker.nextId() + "");
+        //密码加密
+        String newPassword = encoder.encode(user.getPassword());
+        user.setPassword(newPassword);
         userDao.save(user);
     }
 
@@ -196,5 +203,20 @@ public class UserService {
         return true;
     }
 
+    /**
+     * 根据手机号和密码查询用户
+     *
+     * @param mobile
+     * @param password
+     * @return
+     */
+    public User findByMobileAndPassword(String mobile, String password) {
+        User user = userDao.findByMobile(mobile);
+        if (user != null && encoder.matches(password, user.getPassword())) {
+            return user;
+        } else {
+            return null;
+        }
+    }
 
 }

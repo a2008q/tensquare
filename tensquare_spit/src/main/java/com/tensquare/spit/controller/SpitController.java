@@ -5,10 +5,14 @@ import com.tensquare.spit.service.SpitService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import util.IdWorker;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 应用模块名称<p>
@@ -25,6 +29,11 @@ public class SpitController {
     private SpitService spitService;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private IdWorker idWorker;
+    @Autowired
+    private HttpServletRequest request;
+
 
     /**
      * 查询全部数据
@@ -54,6 +63,11 @@ public class SpitController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Spit spit) {
+        Claims claims=(Claims)request.getAttribute("user_claims");
+        if(claims==null){
+            return new Result(false,StatusCode.ACCESSERROR,"无权访问");
+        }
+        spit.set_id(idWorker.nextId()+"");
         spitService.add(spit);
         return new Result(true, StatusCode.OK, "增加成功");
     }

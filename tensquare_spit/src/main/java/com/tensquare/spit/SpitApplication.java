@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import util.IdWorker;
+import util.JwtUtil;
 
 /**
  * 应用模块名称<p>
@@ -17,8 +18,14 @@ public class SpitApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpitApplication.class, args);
     }
+
     @Bean
-    public IdWorker idWorkker(){
+    public IdWorker idWorkker() {
         return new IdWorker(1, 1);
+    }
+
+    @Bean
+    public JwtUtil jwtUtil() {
+        return new util.JwtUtil();
     }
 }

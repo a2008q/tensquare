@@ -16,8 +16,6 @@ public class User implements Serializable{
 	@Id
 	private String id;//ID
 
-
-	
 	private String mobile;//手机号码
 	private String password;//密码
 	private String nickname;//昵称

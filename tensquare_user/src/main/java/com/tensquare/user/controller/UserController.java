@@ -125,7 +125,6 @@ public class UserController {
      */
     @RequestMapping(value = "/sendsms/{mobile}", method = RequestMethod.POST)
     public Result sendsms(@PathVariable String mobile) {
-        mobile = "+86" + mobile;
         userService.sendSms(mobile);
         return new Result(true, StatusCode.OK, "发送成功");
     }
@@ -150,6 +149,17 @@ public class UserController {
         } else {
             return new Result(false, StatusCode.LOGINERROR, "用户名或密码错误");
         }
+    }
+
+    /**
+     * 用户注册
+     *
+     * @param user
+     */
+    @RequestMapping(value = "/register/{code}", method = RequestMethod.POST)
+    public Result register(@RequestBody User user, @PathVariable String code) {
+        userService.add(user, code);
+        return new Result(true, StatusCode.OK, "注册成功");
     }
 
 

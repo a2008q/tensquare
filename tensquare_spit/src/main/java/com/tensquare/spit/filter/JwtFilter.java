@@ -17,13 +17,14 @@ public class JwtFilter extends HandlerInterceptorAdapter {
 
     //进入方法之前进行拦截
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
         System.out.println("经过了拦截器");
         final String authHeader = request.getHeader("Authorization");
         if (authHeader != null && authHeader.startsWith("Bearer")) {
             final String token = authHeader.substring(7);//token Bearer
             Claims claims = jwtUtil.parseJWT(token);
             if (claims != null) {
+                request.setAttribute("uId",claims.getId());
                 if ("admin".equals(claims.get("roles"))) {
                     //如果是管理员
                     request.setAttribute("admin_claims", claims);

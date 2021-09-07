@@ -60,9 +60,9 @@ public class SpitController {
      */
     @RequestMapping(method = RequestMethod.POST)
     public Result add(@RequestBody Spit spit) {
-        Claims claims=(Claims)request.getAttribute("user_claims");
-        if(claims==null){
-            return new Result(false,StatusCode.ACCESSERROR,"无权访问");
+        Claims claims = (Claims) request.getAttribute("user_claims");
+        if (claims == null) {
+            return new Result(false, StatusCode.ACCESSERROR, "无权访问");
         }
         spitService.add(spit);
         return new Result(true, StatusCode.OK, "增加成功");
@@ -114,8 +114,7 @@ public class SpitController {
      */
     @RequestMapping(value = "/thumbup/{id}", method = RequestMethod.PUT)
     public Result updateThumbup(@PathVariable String id) {
-        // TODO fix userId
-        String userid = "1";
+        String userid = (String) request.getAttribute("uId");
         if (redisTemplate.opsForValue().get("thumbup_" + userid + "_" + id) != null) {
             return new Result(false, StatusCode.REPERROR, "您已经点过赞了");
         }

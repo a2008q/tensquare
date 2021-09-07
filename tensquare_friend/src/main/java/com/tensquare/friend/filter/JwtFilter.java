@@ -9,27 +9,35 @@ import util.JwtUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * @autor a2008q
+ */
 @Component
 public class JwtFilter extends HandlerInterceptorAdapter {
+
     @Autowired
     private JwtUtil jwtUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        System.out.println("经过了拦截器");
-        final String authHeader = request.getHeader("Authorization");
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            final String token = authHeader.substring(7); // The partafter "Bearer "
-            Claims claims = jwtUtil.parseJWT(token);
-            System.out.println(claims.get("roles"));
-            if (claims != null) {
-                if ("admin".equals(claims.get("roles"))) {//如果是管理员
-                    request.setAttribute("admin_claims", claims);
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
+        System.out.println("经过了添加好友的拦截器");
+
+        final String header=request.getHeader("Authorization");
+
+        if (header!=null&&header.startsWith("Bearer")){
+            String token=header.substring(7);
+
+            Claims claims=jwtUtil.parseJWT(token);
+            if (claims!=null){
+                if ("admin".equals(claims.get("roles"))){
+                    request.setAttribute("admin_claims",claims);
                 }
-                if ("user".equals(claims.get("roles"))) {//如果是用户
-                    request.setAttribute("user_claims", claims);
+                if ("user".equals(claims.get("roles"))){
+                    request.setAttribute("user_claims",claims);
                 }
             }
+
         }
         return true;
     }

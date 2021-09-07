@@ -9,22 +9,25 @@ import org.springframework.context.annotation.Bean;
 import util.IdWorker;
 import util.JwtUtil;
 
+/**
+ * @autor lzh
+ * @date 2021/8/31 17:27
+ */
 @SpringBootApplication
-@EnableEurekaClient
 @EnableDiscoveryClient
+@EnableEurekaClient
 @EnableFeignClients
 public class FriendApplication {
     public static void main(String[] args) {
-        SpringApplication.run(FriendApplication.class);
+        SpringApplication.run(FriendApplication.class,args);
     }
 
     @Bean
-    public IdWorker idWorkker() {
+    public IdWorker idWorkker(){
         return new IdWorker(1, 1);
     }
-
     @Bean
-    public JwtUtil jwtUtil() {
+    public JwtUtil jwtUtil(){
         return new util.JwtUtil();
     }
 }

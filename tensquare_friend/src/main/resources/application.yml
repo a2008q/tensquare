@@ -11,9 +11,6 @@ spring:
   jpa:
     database: MySQL
     show-sql: true
-    properties:
-      hibernate:
-        globally_quoted_identifiers: true
 jwt:
   config:
     key: OgM9k5oT

@@ -141,7 +141,7 @@ public class UserController {
     public Result login(String mobile, String password) {
         User user = userService.findByMobileAndPassword(mobile, password);
         if (user != null) {
-            String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "admin");
+            String token = jwtUtil.createJWT(user.getId(), user.getNickname(), "user");
             Map map = new HashMap();
             map.put("token", token);
             map.put("name", user.getNickname());

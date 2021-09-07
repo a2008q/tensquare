@@ -32,3 +32,7 @@ zuul:
     tensquare-user:
       path: /user/**
       serviceId: tensquare-user
+jwt:
+  config:
+    key: OgM9k5oT
+    #ttl: 360000

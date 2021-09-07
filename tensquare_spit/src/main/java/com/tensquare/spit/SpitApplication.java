@@ -2,6 +2,7 @@ package com.tensquare.spit;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 import util.IdWorker;
 import util.JwtUtil;
@@ -14,6 +15,7 @@ import util.JwtUtil;
  * @since 2021/9/5 16:43
  */
 @SpringBootApplication
+@EnableEurekaClient
 public class SpitApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpitApplication.class, args);

@@ -10,3 +10,9 @@ spring:
 jwt:
   config:
     key: OgM9k5oT
+eureka:
+  client:
+    service‐url:
+      defaultZone: http://localhost:6868/eureka
+  instance:
+    prefer‐ip‐address: true #跨服务器访问

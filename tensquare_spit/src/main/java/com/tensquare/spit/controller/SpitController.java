@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
-import util.IdWorker;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,8 +28,6 @@ public class SpitController {
     private SpitService spitService;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private IdWorker idWorker;
     @Autowired
     private HttpServletRequest request;
 
@@ -67,7 +64,6 @@ public class SpitController {
         if(claims==null){
             return new Result(false,StatusCode.ACCESSERROR,"无权访问");
         }
-        spit.set_id(idWorker.nextId()+"");
         spitService.add(spit);
         return new Result(true, StatusCode.OK, "增加成功");
     }

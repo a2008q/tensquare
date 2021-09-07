@@ -88,7 +88,6 @@ public class ReplyController {
         if (claims == null) {
             return new Result(false, StatusCode.ACCESSERROR, "无权访问");
         }
-        reply.setUserid(claims.getId());
         replyService.add(reply);
         return new Result(true, StatusCode.OK, "增加成功");
     }

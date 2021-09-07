@@ -87,7 +87,6 @@ public class ProblemController {
         if (claims == null) {
             return new Result(false, StatusCode.ACCESSERROR, "无权访问");
         }
-        problem.setUserid(claims.getId());
         problemService.add(problem);
         return new Result(true, StatusCode.OK, "增加成功");
     }
